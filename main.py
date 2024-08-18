@@ -125,7 +125,7 @@ def main(opt):
         t2 = default_timer()
 
         print("Epoch: %d, time: %.3f, Train Loss: %.12f, Train l2: %.12f, Test l2: %.12f, lr: %.6f"
-              % (ep, t2 - t1, train_mse, train_l2, test_l2, optimizer.param_groups[0]["lr"]) + " [updated save]" if test_l2 < best_test_l2 else "")
+              % (ep, t2 - t1, train_mse, train_l2, test_l2, optimizer.param_groups[0]["lr"]) + (" [updated save]" if test_l2 < best_test_l2 else ""))
         if test_l2 < best_test_l2:
             torch.save(model.state_dict(), f'saves/{opt.timestring}_{opt.model.lower()}_best.pt')
             best_test_l2 = test_l2
