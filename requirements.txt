@@ -1,0 +1,8 @@
+numpy
+tqdm
+matplotlib
+scipy
+torch
+h5py
+wandb
+pytz
