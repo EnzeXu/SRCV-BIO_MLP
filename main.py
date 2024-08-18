@@ -175,8 +175,14 @@ if __name__ == '__main__':
     parser.add_argument("--seed", default=42, type=int, help="""random seed""")
     parser.add_argument("--epoch", default=1000, type=int, help="""epoch""")
     parser.add_argument("--data_norm", default=False, type=bool, help="""data_norm""")
+    parser.add_argument('--shell_timestring', type=str, default="", help="""shell_timestring""")
     opt = parser.parse_args()
-    opt.timestring = get_timestring()
+
+    if opt.timestring == "":
+        opt.timestring = get_timestring()
+    else:
+        assert len(opt.timestring) == 22
+
     print(f"Timestring: {opt.timestring}")
     if opt.data_norm:
         opt.data_path = "data/MPF_2_separate_0.000001_norm.npy"
