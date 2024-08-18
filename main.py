@@ -44,6 +44,7 @@ def main(opt):
 
     log_path = f"output/summary/{opt.model}.csv"
     if not os.path.exists(log_path):
+        print(f"file {log_path} does not exist. Creating title row ...")
         with open(log_path, "w") as f:
             f.write(
                 f"start_time,end_time,model,epoch,gpu_id,norm,time_cost,seed,best_test_l2_epoch,best_test_l2\n")
@@ -160,8 +161,7 @@ def main(opt):
     print("=============================\n")
     end_time = get_timestring()
     with open(log_path, "a") as f:
-        f.write(
-            f"{opt.timestring},{end_time},{opt.model},{opt.epoch},{opt.gpu_id},{opt.data_norm},{elapsed},{opt.seed},{best_test_l2_epoch},{best_test_l2}\n")
+        f.write(f"{opt.timestring},{end_time},{opt.model},{opt.epoch},{opt.gpu_id},{opt.data_norm},{elapsed},{opt.seed},{best_test_l2_epoch},{best_test_l2}\n")
 
     return model
 
