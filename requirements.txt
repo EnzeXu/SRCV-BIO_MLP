@@ -6,3 +6,4 @@ torch
 h5py
 wandb
 pytz
+jupyter

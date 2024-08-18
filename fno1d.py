@@ -187,3 +187,37 @@ class MyFNO1d(nn.Module):
         x = F.relu(x)
         x = self.fc2(x)
         return x
+
+
+class MLP(nn.Module):
+    def __init__(self, in_channel, out_channel):
+        super(MLP, self).__init__()
+        self.in_channel = in_channel
+        self.fc1 = nn.Linear(in_channel, 128)
+        self.bn1 = nn.BatchNorm1d(128)  # Added BatchNorm after fc1
+        self.fc2 = nn.Linear(128, 256)
+        self.bn2 = nn.BatchNorm1d(256)  # Added BatchNorm after fc2
+        self.fc3 = nn.Linear(256, 128)
+        self.bn3 = nn.BatchNorm1d(128)  # Added BatchNorm after fc3
+        self.fc4 = nn.Linear(128, out_channel)
+
+    def forward(self, x):
+        x = x[..., :self.in_channel]
+        n_batch, n_traj, _ = iter(x.shape)
+        x = x.reshape([-1, self.in_channel])
+        # print(f"x shape at cp 0: {x.shape}")
+        x = self.fc1(x)
+        # print(f"x shape at cp 1: {x.shape}")
+        x = F.relu(self.bn1(x))
+        # print(f"x shape at cp 2: {x.shape}")
+        x = self.fc2(x)
+        # print(f"x shape at cp 3: {x.shape}")
+        x = F.relu(self.bn2(x))
+        # print(f"x shape at cp 4: {x.shape}")
+        x = self.fc3(x)
+        # print(f"x shape at cp 5: {x.shape}")
+        x = F.relu(self.bn3(x))
+        x = self.fc4(x)
+        x = x.reshape([n_batch, n_traj, -1])
+        # print(f"x shape at cp 6: {x.shape}")
+        return x
