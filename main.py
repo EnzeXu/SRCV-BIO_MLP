@@ -159,7 +159,7 @@ def main(opt):
     print('Training time: %.3f' % (elapsed))
     print("=============================\n")
     end_time = get_timestring()
-    with open(log_path, "w") as f:
+    with open(log_path, "a") as f:
         f.write(
             f"{opt.timestring},{end_time},{opt.model},{opt.epoch},{opt.gpu_id},{opt.data_norm},{elapsed},{opt.seed},{best_test_l2_epoch},{best_test_l2}\n")
 
