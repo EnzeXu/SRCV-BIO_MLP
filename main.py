@@ -175,7 +175,7 @@ if __name__ == '__main__':
     parser.add_argument("--seed", default=42, type=int, help="""random seed""")
     parser.add_argument("--epoch", default=1000, type=int, help="""epoch""")
     parser.add_argument("--data_norm", default=False, type=bool, help="""data_norm""")
-    parser.add_argument('--shell_timestring', type=str, default="", help="""shell_timestring""")
+    parser.add_argument('--timestring', type=str, default="", help="""timestring""")
     opt = parser.parse_args()
 
     if opt.timestring == "":

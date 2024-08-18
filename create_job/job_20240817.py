@@ -9,8 +9,8 @@ do
             do
                 timestring=$(python shell_timestring.py)
                 output_path="output/log/${{model}}_${{timestring}}_norm_${{norm}}.txt"
-                echo "python -u main.py --gpu_id ${{gpu_id}} --model ${{model}} --data_norm ${{norm}} --seed ${{seed}} --epoch 1000 >> ${{output_path}}"
-                python -u main.py --gpu_id ${{gpu_id}} --model ${{model}} --data_norm ${{norm}} --seed ${{seed}} --epoch 1000 >> ${{output_path}}
+                echo "python -u main.py --gpu_id ${{gpu_id}} --model ${{model}} --data_norm ${{norm}} --seed ${{seed}} --epoch 1000 --timestring ${{timestring}} >> ${{output_path}}"
+                python -u main.py --gpu_id ${{gpu_id}} --model ${{model}} --data_norm ${{norm}} --seed ${{seed}} --epoch 1000 --timestring ${{timestring}} >> ${{output_path}}
             done
         done
     done
