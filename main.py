@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import time
+import os
 import sys
 import wandb
 from timeit import default_timer
@@ -28,7 +29,7 @@ def main(opt):
     batch_size = 64
     learning_rate = 0.001
 
-    epochs = 1000  # default 500
+    epochs = opt.epoch  # default 500
     step_size = 100  # default 100
     gamma = 0.5
 
@@ -40,6 +41,12 @@ def main(opt):
     s = 100
     sub = 100000 // s
     n_dim = 2
+
+    log_path = f"output/summary/{opt.model}.csv"
+    if not os.path.exists(log_path):
+        with open(log_path, "w") as f:
+            f.write(
+                f"start_time,end_time,model,epoch,gpu_id,norm,time_cost,seed,best_test_l2_epoch,best_test_l2\n")
 
     data: np.ndarray = np.load(opt.data_path)
     print(f"raw data shape: {data.shape}")
@@ -85,6 +92,7 @@ def main(opt):
     myloss = LpLoss(size_average=False)
     # y_normalizer.cuda()
     best_test_l2 = float("inf")
+    best_test_l2_epoch = -1
     for ep in range(epochs):
         model.train()
         t1 = default_timer()
@@ -129,6 +137,7 @@ def main(opt):
         if test_l2 < best_test_l2:
             torch.save(model.state_dict(), f'saves/{opt.timestring}_{opt.model.lower()}_best.pt')
             best_test_l2 = test_l2
+            best_test_l2_epoch = ep + 1
         if opt.wandb:
             try:
                 wandb.log({
@@ -149,6 +158,11 @@ def main(opt):
     print("Training done...")
     print('Training time: %.3f' % (elapsed))
     print("=============================\n")
+    end_time = get_timestring()
+    with open(log_path, "w") as f:
+        f.write(
+            f"{opt.timestring},{end_time},{opt.model},{opt.epoch},{opt.gpu_id},{opt.data_norm},{elapsed},{opt.seed},{best_test_l2_epoch},{best_test_l2}\n")
+
     return model
 
 
@@ -159,6 +173,7 @@ if __name__ == '__main__':
     parser.add_argument("--wandb", default=True, type=bool, help="""use wandb""")
     parser.add_argument("--model", default="MLP", choices=["MLP", "MLP_with_grid", "FNO"], type=str, help="""model type""")
     parser.add_argument("--seed", default=42, type=int, help="""random seed""")
+    parser.add_argument("--epoch", default=1000, type=int, help="""epoch""")
     parser.add_argument("--data_norm", default=False, type=bool, help="""data_norm""")
     opt = parser.parse_args()
     opt.timestring = get_timestring()
