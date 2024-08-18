@@ -55,7 +55,7 @@ def main(opt):
 
     grid_all = np.linspace(0, 1, 100000).reshape(100000, 1).astype(np.float64)
     grid = grid_all[::sub, :]
-    grid = torch.tensor(grid, dtype=torch.float)
+    grid = torch.tensor(grid, dtype=torch.float).to(device)
     x_train = torch.cat([x_train.reshape(ntrain, s, n_dim), grid.repeat(ntrain, 1, 1)], dim=2)
     x_test = torch.cat([x_test.reshape(ntest, s, n_dim), grid.repeat(ntest, 1, 1)], dim=2)
     print(f"x_train shape: {x_train.shape}, y_train shape: {y_train.shape}")
